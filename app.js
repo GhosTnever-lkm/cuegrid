@@ -155,7 +155,10 @@
   }
 
   function playCue(cue) {
-    if (playing.has(cue.id) && cue.loop) return stopCue(cue.id);
+    if (playing.has(cue.id)) {
+      stopCue(cue.id);
+      if (cue.loop) return;
+    }
     if (!cue.blob) return showToast('This cue has no stored audio file');
     const audio = new Audio();
     const url = URL.createObjectURL(cue.blob);
@@ -252,6 +255,10 @@
     if (files.length) addFiles(files);
   });
   window.addEventListener('beforeunload', () => stopCue());
+
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    navigator.serviceWorker.register('./sw.js').catch(() => showToast('Offline cache is unavailable in this browser'));
+  }
 
   readState().then((loaded) => {
     state = loaded;

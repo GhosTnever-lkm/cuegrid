@@ -6,7 +6,7 @@ CueGrid keeps short audio cues in a fast, touch-friendly grid. Add your own file
 
 ## Use
 
-Open `index.html` in a modern browser. Add MP3, WAV, OGG, or other audio supported by your browser. Click a pad or press its displayed shortcut while the CueGrid tab is focused. Use **Stop all** to silence all active cues. Boards and audio are stored locally in IndexedDB.
+Open `index.html` in a modern browser, or visit the hosted Pages app. Add MP3, WAV, OGG, or other audio supported by your browser. Click a pad or press its displayed shortcut while the CueGrid tab is focused. Use **Stop all** to silence all active cues. Boards and audio are stored locally in IndexedDB. On the hosted app, a service worker caches the app shell for later offline use; open it once online first.
 
 Keyboard shortcuts only work while this page has focus. This web edition does not provide system-wide hotkeys, virtual microphone routing, or OBS integration.
 
@@ -17,10 +17,11 @@ Keyboard shortcuts only work while this page has focus. This web edition does no
 - Simultaneous cue playback, pad activity state, and a global stop control.
 - Focus-aware keyboard shortcuts and large touch targets.
 - No third-party libraries, remote fonts, trackers, or network requests.
+- The hosted app can continue loading offline after its first successful visit.
 
 ## Privacy and storage
 
-Audio files and board settings remain in the browser's local IndexedDB database. Clearing site data removes them. Keep separate backups of source audio. CueGrid does not read files until you select them and does not transmit them.
+Audio files and board settings remain in the browser's local IndexedDB database. Clearing site data removes them. Keep separate backups of source audio. CueGrid does not read files until you select them and does not transmit them. The offline cache stores only app files, not the sound library.
 
 ## Roadmap
 
