@@ -16,7 +16,7 @@ Keyboard shortcuts only work while this page has focus. This web edition does no
 - Local audio import, rename, remove, per-pad volume and loop.
 - Simultaneous cue playback, pad activity state, and a global stop control.
 - Focus-aware keyboard shortcuts and large touch targets.
-- No third-party libraries, remote fonts, trackers, or network requests.
+- No third-party libraries, remote fonts, trackers, or analytics. The hosted service worker fetches and caches only CueGrid's own static app files.
 - The hosted app can continue loading offline after its first successful visit.
 
 ## Privacy and storage
