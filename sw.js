@@ -1,5 +1,5 @@
-const CACHE = 'cuegrid-v0.1.0';
-const FILES = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest', './icon.svg'];
+const CACHE = 'cuegrid-v0.2.0';
+const FILES = ['./', './index.html', './styles.css', './backup-core.js', './app.js', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(FILES)).then(() => self.skipWaiting()));

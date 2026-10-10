@@ -4,6 +4,7 @@
   const DB_NAME = 'cuegrid-local';
   const DB_VERSION = 1;
   const MAX_PADS = 24;
+  const MAX_BACKUP_BYTES = 50 * 1024 * 1024;
   const COLORS = ['violet', 'cyan', 'amber', 'rose', 'lime'];
   const $ = (selector) => document.querySelector(selector);
   const dbPromise = new Promise((resolve, reject) => {
@@ -16,6 +17,7 @@
   let state = null;
   let editingId = null;
   let activeBoardId = null;
+  let backupMode = 'replace';
   let toastTimer = 0;
   const playing = new Map();
 
@@ -43,8 +45,10 @@
         tx.onerror = () => reject(tx.error);
         tx.onabort = () => reject(tx.error || new Error('Storage transaction aborted'));
       });
+      return true;
     } catch (error) {
       showToast(`Couldn't save locally: ${error.message || 'browser storage is unavailable'}`);
+      return false;
     }
   }
 
@@ -174,7 +178,69 @@
   }
 
   $('#importButton').addEventListener('click', () => $('#fileInput').click());
+  $('#exportBackup').addEventListener('click', async () => {
+    try {
+      const payload = await window.CueGridBackup.exportWorkspace(state, MAX_BACKUP_BYTES);
+      const url = URL.createObjectURL(new Blob([payload], { type: 'application/json' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `cuegrid-backup-${new Date().toISOString().slice(0, 10)}.cuegrid.json`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showToast('Backup downloaded with boards and audio');
+    } catch (error) {
+      showToast(`Backup failed: ${error.message}`);
+    }
+  });
+  $('#importBackup').addEventListener('click', () => { backupMode = 'replace'; $('#backupInput').click(); });
+  $('#importPack').addEventListener('click', () => { backupMode = 'merge'; $('#backupInput').click(); });
+  $('#backupInput').addEventListener('change', async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    if (file.size > MAX_BACKUP_BYTES * 1.4) return showToast('Backup file exceeds the 70 MiB limit');
+    try {
+      const restored = await window.CueGridBackup.importWorkspace(await file.text(), MAX_BACKUP_BYTES);
+      const cueCount = restored.boards.reduce((total, item) => total + item.cues.length, 0);
+      const previousState = state;
+      if (backupMode === 'merge') {
+        if (state.boards.length + restored.boards.length > 100) throw new Error('Adding this pack would exceed the 100-board limit');
+        if (!confirm(`Add ${restored.boards.length} board(s) and ${cueCount} cue(s) to the current library?`)) return;
+        const names = new Set(state.boards.map((item) => item.name.toLowerCase()));
+        for (const item of restored.boards) {
+          const baseName = item.name.slice(0, 26);
+          let name = baseName;
+          let suffix = 2;
+          while (names.has(name.toLowerCase())) {
+            const ending = ` (${suffix})`;
+            name = `${baseName.slice(0, 32 - ending.length)}${ending}`;
+            suffix += 1;
+          }
+          item.name = name;
+          names.add(name.toLowerCase());
+        }
+        state = { ...state, boards: [...state.boards, ...restored.boards], activeBoardId: restored.boards[0].id };
+      } else {
+        if (!confirm(`Replace the current CueGrid library with ${restored.boards.length} board(s) and ${cueCount} cue(s)?`)) return;
+        state = restored;
+      }
+      stopCue();
+      activeBoardId = state.activeBoardId;
+      const saved = await saveState();
+      if (!saved) {
+        state = previousState;
+        activeBoardId = state.activeBoardId;
+        render();
+        return;
+      }
+      render();
+      showToast(backupMode === 'merge' ? `Added ${restored.boards.length} board(s) and ${cueCount} cue(s)` : `Restored ${state.boards.length} board(s) and ${cueCount} cue(s)`);
+    } catch (error) {
+      showToast(`Restore failed: ${error.message}`);
+    }
+  });
   $('#newBoard').addEventListener('click', () => {
+    if (state.boards.length >= 100) return showToast('CueGrid supports up to 100 boards');
     const name = prompt('Name this cue board', `Board ${state.boards.length + 1}`);
     if (name === null) return;
     const trimmed = name.trim().slice(0, 32);
