@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101415">
+  <meta name="description" content="A local, touch-friendly sound cue board for streams, live shows, tabletop sessions, and presentations.">
+  <title>CueGrid — Live Cue Board</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="CueGrid home"><span class="brand-mark">▦</span><span>CueGrid</span></a>
+      <div class="top-actions">
+        <span class="local-status"><i></i> LOCAL ONLY</span>
+        <button id="importButton" class="button button-quiet" type="button">＋ Add sounds</button>
+        <input id="fileInput" type="file" accept="audio/*" multiple hidden>
+        <button id="stopAll" class="button button-stop" type="button" title="Stop all playing cues">■ <span>Stop all</span></button>
+      </div>
+    </header>
+
+    <section class="intro">
+      <div>
+        <p class="eyebrow">LIVE CONTROL / 24 PADS PER BOARD</p>
+        <h1>Every cue, <em>one tap away.</em></h1>
+        <p class="subhead">A personal soundboard for the moments you want to hit on time.</p>
+      </div>
+      <div class="master-card">
+        <label for="masterVolume">MASTER LEVEL <strong id="masterValue">80%</strong></label>
+        <input id="masterVolume" type="range" min="0" max="100" value="80" aria-label="Master volume">
+        <span class="focus-hint"><kbd>1</kbd>–<kbd>9</kbd> trigger pads · tab must be focused</span>
+      </div>
+    </section>
+
+    <nav class="board-bar" aria-label="Cue boards">
+      <div id="boardTabs" class="board-tabs"></div>
+      <button id="newBoard" class="new-board" type="button">＋ New board</button>
+      <span id="boardCount" class="board-count"></span>
+    </nav>
+
+    <section id="cueGrid" class="cue-grid" aria-label="Sound cue pads"></section>
+
+    <footer class="footer">
+      <span><b id="cueCount">0</b> cues on this board</span>
+      <span>Audio stays in this browser · <button id="clearBoard" class="text-button" type="button">Clear board</button></span>
+    </footer>
+  </main>
+
+  <dialog id="editDialog" class="edit-dialog">
+    <form method="dialog" id="editForm">
+      <div class="dialog-head"><div><p class="eyebrow">CUE SETTINGS</p><h2 id="dialogTitle">Edit cue</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div>
+      <label class="field-label" for="cueName">Pad name</label>
+      <input id="cueName" class="text-input" maxlength="48" required>
+      <div class="two-fields">
+        <div><label class="field-label" for="cueKey">Shortcut key</label><input id="cueKey" class="text-input" maxlength="1" placeholder="1–9, A–Z"></div>
+        <div><label class="field-label" for="cueColor">Pad color</label><select id="cueColor" class="text-input"><option value="violet">Violet</option><option value="cyan">Cyan</option><option value="amber">Amber</option><option value="rose">Rose</option><option value="lime">Lime</option></select></div>
+      </div>
+      <label class="range-label" for="cueVolume"><span>PAD LEVEL</span><strong id="padValue">100%</strong></label>
+      <input id="cueVolume" type="range" min="0" max="100" value="100">
+      <label class="check-row"><input id="cueLoop" type="checkbox"> Loop this cue until stopped</label>
+      <div class="dialog-actions"><button id="removeCue" class="button button-danger" type="button">Remove sound</button><button class="button button-primary" value="save">Save changes</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>

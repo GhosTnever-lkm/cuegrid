@@ -1,0 +1,10 @@
+{
+  "name": "CueGrid — Live Cue Board",
+  "short_name": "CueGrid",
+  "description": "A local audio cue board for streams, shows, and sessions.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#101415",
+  "theme_color": "#101415",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
