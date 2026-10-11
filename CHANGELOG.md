@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 - 2026-10-11
+
+- Add a real screenshot of the app to the README.
+
 ## 0.2.0
 
 - Add a portable full-library backup and restore flow that includes board settings and audio files.
