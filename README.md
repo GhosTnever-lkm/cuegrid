@@ -2,6 +2,8 @@
 
 **A local cue board for live shows, streams, tabletop sessions, and presentations.**
 
+![CueGrid: cue board with pads and live preview](docs/screenshot.png)
+
 CueGrid keeps short audio cues in a fast, touch-friendly grid. Add your own files, arrange them into boards, assign optional keys, set individual volume and loop behavior, and stop every sound instantly. Your audio stays in this browser profile; there is no account or upload service.
 
 ## Use
