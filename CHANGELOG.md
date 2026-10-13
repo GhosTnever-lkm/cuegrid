@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2 - 2026-10-13
+
+- Correct cue card markup so play and edit buttons are not nested inside another button.
+- Align the version file with the published package version.
+
 ## 0.2.1 - 2026-10-11
 
 - Add a real screenshot of the app to the README.
