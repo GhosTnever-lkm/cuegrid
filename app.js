@@ -86,7 +86,7 @@
     grid.replaceChildren();
     for (let index = 0; index < MAX_PADS; index += 1) {
       const cue = current.cues[index];
-      const pad = document.createElement('button');
+      const pad = document.createElement('div');
       pad.className = `cue-pad${cue ? '' : ' empty'}${cue && playing.has(cue.id) ? ' playing' : ''}`;
       pad.dataset.index = String(index);
       pad.dataset.color = cue?.color || 'violet';
