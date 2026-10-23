@@ -19,7 +19,7 @@ jobs:
           git archive --format=zip --prefix="CueGrid-${GITHUB_REF_NAME}/" HEAD -o "dist/CueGrid-${GITHUB_REF_NAME}.zip"
           cd dist
           sha256sum "CueGrid-${GITHUB_REF_NAME}.zip" > "CueGrid-${GITHUB_REF_NAME}.zip.sha256"
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
           files: |
